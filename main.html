@@ -59,11 +59,13 @@
         body {
             background-color: #fff;
             color: black;
+            width:420px;
         }
 
         canvas {
             border: #364364 solid 1px;
             background-image: url("透明.png");
+            width:400px;
         }
 
         #i-zero {
@@ -86,7 +88,6 @@
     <span class="din">Re: Life in different world from zero logo generator</span><br>
     <canvas width="1100" height="400"></canvas>
     <div class="settings"></div>
-    <button id="render">Render!</button>
     <span>テキスト見本 Re:</span>
     <input type="text" id="i-zero" value="ゼロ">
     <input type="text" id="i-kara" value="から始める異世界生活">
@@ -97,7 +98,6 @@
     <script>
         const el = {
             canvas: document.querySelector("canvas"),
-            renderBtn: document.querySelector("#render"),
             mousePosX: document.querySelector("#mouse-position-x"),
             mousePosY: document.querySelector("#mouse-position-y"),
             zero: document.querySelector("#i-zero"),
@@ -170,10 +170,6 @@
             ctx.clearRect(650, 370, 150, 200)
         }
 
-        el.renderBtn.addEventListener("click", () => {
-            render()
-            console.log("rendered")
-        })
         el.canvas.addEventListener('mousemove', function (e) {
             el.mousePosX.innerHTML = `X:${e.clientX}`
             el.mousePosY.innerHTML = `Y:${500 - Math.abs(e.clientY - 572)}`

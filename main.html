@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>ロゴジェネレーター - Re:ゼロから始める異世界生活</title>
+    <link rel="stylesheet" href="../../assets/css/index.css">
+    <style>
+        @font-face {
+            font-family: 'Caslon';
+            font-style: normal;
+            font-weight: normal;
+            src: local('Caslon OS Regular'), url('fonts/CaslonOS-Regular.woff') format('woff');
+        }
+
+        @font-face {
+            font-family: 'Han Sans JP';
+            font-style: normal;
+            font-weight: normal;
+            src: local('Han Sans JP'), url('fonts/SourceHanSansJP-Heavy-1.otf') format('woff');
+        }
+
+        @font-face {
+            font-family: 'Noto Serif JP';
+            font-style: normal;
+            font-weight: normal;
+            src: local('Noto Serif JP'), url('fonts/NotoSerifJP[wght].woff') format('woff');
+        }
+
+        @font-face {
+            font-family: 'DinCondensedBold';
+            font-style: normal;
+            font-weight: normal;
+            src: local('DinCondensedBold'), url('fonts/D-DINCondensed-Bold.woff') format('woff');
+        }
+
+        @font-face {
+            font-family: 'Zen';
+            font-style: normal;
+            font-weight: normal;
+            src: local('Zem'), url('fonts/ZenAntique-Regular.ttf') format('woff');
+        }
+
+        .caslon {
+            font-family: 'Caslon';
+        }
+
+        .noto {
+            font-family: 'Zen';
+        }
+
+        .gen {
+            font-family: 'Han Sans JP';
+        }
+
+        .din {
+            font-family: 'DinCondensedBold';
+        }
+
+        body {
+            background-color: #fff;
+            color: black;
+        }
+
+        canvas {
+            border: #364364 solid 1px;
+            background-image: url("透明.png");
+        }
+
+        #i-zero {
+            width: 30px;
+        }
+
+        #i-middle {
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <span class="caslon">Re</span><span class="gen">:ゼロ</span>
+        <span class="noto">から</span><span class="gen">始</span>
+        <span class="noto">める</span><span class="gen">異世界生活 ロゴ</span>
+        <span class="noto">ジェネレーター</span><br>
+    </h1>
+    <span class="din">Re: Life in different world from zero logo generator</span><br>
+    <canvas width="1200" height="500"></canvas>
+    <div class="settings"></div>
+    <button id="render">Render!</button>
+    <span>テキスト見本 Re:</span>
+    <input type="text" id="i-zero" value="ゼロ">
+    <input type="text" id="i-kara" value="から始める異世界生活">
+    <input type="text" id="i-middle" value="Re: Life in a different world from zero">
+
+    <span id="mouse-position-x"></span>
+    <span id="mouse-position-y"></span>
+    <script>
+        const el = {
+            canvas: document.querySelector("canvas"),
+            renderBtn: document.querySelector("#render"),
+            mousePosX: document.querySelector("#mouse-position-x"),
+            mousePosY: document.querySelector("#mouse-position-y"),
+            zero: document.querySelector("#i-zero"),
+            middle: document.querySelector("#i-middle"),
+            kara: document.querySelector("#i-kara"),
+        }
+        const ctx = el.canvas.getContext("2d")
+        let contents = []
+
+        function appendContent(text = "", x, y, font, scale) {
+            contents.push([text, x, y, font, scale])
+        }
+
+        function update() {
+            const texts = []
+            var arr = el.zero.value.split("")
+            arr[1] = arr.slice(1).join("");
+            arr = arr.slice(0, 2)
+            ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
+            console.log(arr)
+            contents=[]
+            appendContent("Re", 120, 220, '200px Caslon')
+            appendContent("：", 330, 220, '140px Han Sans JP')
+            appendContent(arr[0], 420, 180, '180px Han Sans JP')
+            appendContent(arr[1], 570, 220, '180px Han Sans JP')
+
+            var arr = el.kara.value.split("")
+            arr[9] = arr.slice(9).join("");
+            arr = arr.slice(0, 10)
+            appendContent(arr[0], 270, 315, '80px Zen', 1.1)
+            appendContent(arr[1], 330, 315, '80px Zen', 1.1)
+            appendContent(arr[2], 400, 345, '90px Han Sans JP')
+            appendContent(arr[3], 480, 280, '85px Zen', 1.20)
+            appendContent(arr[4], 535, 305, '85px Zen', 1.15)
+            appendContent(arr[5], 610, 315, '85px Han Sans JP', 1.1)
+            appendContent(arr[6], 690, 335, '85px Han Sans JP', 1.1)
+            appendContent(arr[7], 770, 310, '85px Han Sans JP', 1.1)
+            appendContent(arr[8], 850, 315, '85px Han Sans JP', 1.1)
+            appendContent(arr[9], 930, 315, '85px Han Sans JP', 1.1)
+
+            
+            appendContent(el.middle.value.split("").join(" "), 320, 255, '27px DinCondensedBold')
+
+            render()
+        }
+        setTimeout(update, 1500)
+
+        function render() {
+            ctx.fillStyle = "#000"
+            ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
+            var i = 0
+            for (c of contents) {
+                if (i == 0) {
+                    ctx.fillStyle = "#756aab"
+                } else {
+                    ctx.fillStyle = "#000"
+                }
+                if (c[4] == null) { c[4] = 1 }
+                ctx.font = c[3]
+                ctx.save(); // 現在の状態を保存
+                ctx.scale(1, c[4]); // 縦方向にスケーリング
+                ctx.fillText(c[0], c[1], c[2])
+                ctx.restore(); // 変換を元に戻す
+                i++
+            }
+            ctx.clearRect(120, 210, 250, 20)
+            ctx.clearRect(420, 185, 160, 20)
+            ctx.clearRect(200, 347, 500, 200)
+            ctx.clearRect(777, 345, 500, 200)
+            ctx.clearRect(650, 370, 150, 200)
+        }
+
+        el.renderBtn.addEventListener("click", () => {
+            render()
+            console.log("rendered")
+        })
+        el.canvas.addEventListener('mousemove', function (e) {
+            el.mousePosX.innerHTML = `X:${e.clientX}`
+            el.mousePosY.innerHTML = `Y:${500 - Math.abs(e.clientY - 572)}`
+        }, false);
+        el.zero.addEventListener("keydown", function (e) {
+            ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
+            setTimeout(update,100)
+        })
+        el.kara.addEventListener("keydown", function (e) {
+            ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
+            setTimeout(update,100)
+        })
+        el.middle.addEventListener("keydown", function (e) {
+            ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
+            setTimeout(update,100)
+        })
+    </script>
+    <div>
+        <br>
+        <font size="5">使用フォント</font><br>
+        <span>※全てフリーフォントを使用しています。</span><br>
+        <span class="caslon">Caslon OS Ragular</span><br>
+        <span class="noto">ZenAntique-Regular</span><br>
+        <span class="gen">源ノ角ゴシック</span><br>
+        <span class="din">Din Condensed Bold</span><br>
+    </div>
+</body>
+
+</html>

@@ -5,6 +5,9 @@
     <title>ロゴジェネレーター - Re:ゼロから始める異世界生活</title>
     <link rel="stylesheet" href="../../assets/css/index.css">
     <style>
+        html{
+            width:400px;
+        }
         @font-face {
             font-family: 'Caslon';
             font-style: normal;
@@ -98,8 +101,6 @@
     <script>
         const el = {
             canvas: document.querySelector("canvas"),
-            mousePosX: document.querySelector("#mouse-position-x"),
-            mousePosY: document.querySelector("#mouse-position-y"),
             zero: document.querySelector("#i-zero"),
             middle: document.querySelector("#i-middle"),
             kara: document.querySelector("#i-kara"),
@@ -169,11 +170,6 @@
             ctx.clearRect(777, 345, 500, 200)
             ctx.clearRect(650, 370, 150, 200)
         }
-
-        el.canvas.addEventListener('mousemove', function (e) {
-            el.mousePosX.innerHTML = `X:${e.clientX}`
-            el.mousePosY.innerHTML = `Y:${500 - Math.abs(e.clientY - 572)}`
-        }, false);
         el.zero.addEventListener("keydown", function (e) {
             ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
             setTimeout(update,100)

@@ -5,9 +5,10 @@
     <title>ロゴジェネレーター - Re:ゼロから始める異世界生活</title>
     <link rel="stylesheet" href="../../assets/css/index.css">
     <style>
-        html{
-            width:fit-content;
+        html {
+            width: fit-content;
         }
+
         @font-face {
             font-family: 'Caslon';
             font-style: normal;
@@ -62,13 +63,13 @@
         body {
             background-color: #fff;
             color: black;
-            width:100%;
+            width: 100%;
         }
 
         canvas {
             border: #364364 solid 1px;
             background-image: url("透明.png");
-            width:100%;
+            width: 100%;
         }
 
         #i-zero {
@@ -78,7 +79,8 @@
         #i-middle {
             width: 600px;
         }
-        input{
+
+        input {
             font-size: 30px;
         }
     </style>
@@ -98,9 +100,7 @@
     <input type="text" id="i-zero" value="ゼロ">
     <input type="text" id="i-kara" value="から始める異世界生活"><br>
     <input type="text" id="i-middle" value="Re: Life in a different world from zero">
- 
-    <span id="mouse-position-x"></span>
-    <span id="mouse-position-y"></span>
+    <br><input type="button" id="download" value="画像をダウンロード">
     <script>
         const el = {
             canvas: document.querySelector("canvas"),
@@ -122,7 +122,7 @@
             arr = arr.slice(0, 2)
             ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
             console.log(arr)
-            contents=[]
+            contents = []
             appendContent("Re", 120, 220, '200px Caslon')
             appendContent("：", 330, 220, '140px Han Sans JP')
             appendContent(arr[0], 420, 180, '180px Han Sans JP')
@@ -142,7 +142,7 @@
             appendContent(arr[8], 850, 315, '85px Han Sans JP', 1.1)
             appendContent(arr[9], 930, 315, '85px Han Sans JP', 1.1)
 
-            
+
             appendContent(el.middle.value.split("").join(" "), 320, 255, '27px DinCondensedBold')
 
             render()
@@ -175,16 +175,24 @@
         }
         el.zero.addEventListener("keydown", function (e) {
             ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
-            setTimeout(update,100)
+            setTimeout(update, 100)
         })
         el.kara.addEventListener("keydown", function (e) {
             ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
-            setTimeout(update,100)
+            setTimeout(update, 100)
         })
         el.middle.addEventListener("keydown", function (e) {
             ctx.clearRect(0, 0, el.canvas.width, el.canvas.height)
-            setTimeout(update,100)
+            setTimeout(update, 100)
         })
+        document.getElementById("download").onclick = (event) => {
+
+            let link = document.createElement("a");
+            link.href = el.canvas.toDataURL("image/png");
+            link.download = "rezero-logo.png";
+            link.click();
+        }
+
     </script>
     <div>
         <br>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>ロゴジェネレーター - とある科学の超電磁砲</title>
+    <link rel="stylesheet" href="../../assets/css/index.css" />
+    <style>
+      html {
+          width: fit-content;
+      }
+
+      @font-face {
+          font-family: 'koduka';
+          font-style: normal;
+          font-weight: normal;
+          src: local('koduka'), url('fonts/SourceHanSerif-Medium.otf') format('woff');
+      }
+      @font-face {
+          font-family: 'noto-sans';
+          font-style: normal;
+          font-weight: normal;
+          src: local('noto-sans'), url('fonts/NotoSansJP-Bold.ttf') format('woff');
+      }
+
+
+      .koduka {
+          font-family: 'koduka';
+      }
+
+      body {
+          background-color: #fff;
+          color: black;
+          width: 100%;
+      }
+
+      canvas {
+          border: #364364 solid 1px;
+          background-image: url("透明.png");
+          width: 720px;
+      }
+
+      #i-zero {
+          width: 600px;
+      }
+
+      #i-middle {
+          width: 600px;
+      }
+
+      input {
+          font-size: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>
+      <span class="koduka">とある科学の超電磁砲ロゴジェネレーター</span><br />
+    </h1>
+    <canvas width="900" height="400"></canvas>
+    <div class="settings"></div>
+    <input type="text" id="i-1st" value="とある科学の超電磁砲" /><br>
+    <input type="text" id="i-2nd" value="レールガン" /><br>
+    画像品質 低<input type="range" id="quality" min="1" max="5" value="2" />高
+
+    <br /><input type="button" id="download" value="画像をダウンロード" />
+    <script>
+      let scale = 1; //表示サイズ
+      const el = {
+        canvas: document.querySelector("canvas"),
+        first: document.querySelector("#i-1st"),
+        second: document.querySelector("#i-2nd"),
+        middle: document.querySelector("#i-middle"),
+        scale: document.querySelector("#quality"),
+      };
+
+      const ctx = el.canvas.getContext("2d");
+      let contents = [];
+
+      function appendContent(text = "", x, y, font, scale) {
+        contents.push([text, x, y, font, scale]);
+      }
+      function loadFont(font, callback = function () {}) {
+        // フォントを定義
+
+        // フォントを読み込む
+        font
+          .load()
+          .then(function (loadedFont) {
+            // フォントが正常に読み込まれた場合
+            document.fonts.add(loadedFont);
+            console.log("フォントが読み込まれました");
+            callback();
+          })
+          .catch(function (error) {
+            // フォントの読み込みに失敗した場合
+            console.error("フォントの読み込みに失敗しました:", error);
+          });
+      }
+      function collage(
+        inputRGBA = [0, 0, 0, 0],
+        outputRGBA = [255, 255, 255, 255],
+        not = false
+      ) {
+        const imageData = ctx.getImageData(
+          0,
+          0,
+          el.canvas.width,
+          el.canvas.height
+        );
+        const data = imageData.data;
+
+        // グラデーションの作成
+
+        // 特定の色を透過させる
+        for (let i = 0; i < data.length; i += 4) {
+          function exec() {
+            data[i] = outputRGBA[0];
+            data[i + 1] = outputRGBA[1];
+            data[i + 2] = outputRGBA[2];
+            data[i + 3] = outputRGBA[3];
+          }
+          // RGBがすべて0の場合（黒色）
+          if (
+            data[i] === inputRGBA[0] &&
+            data[i + 1] === inputRGBA[1] &&
+            data[i + 2] === inputRGBA[2] &&
+            data[i + 3] === inputRGBA[3]
+          ) {
+            if (!not) {
+              exec();
+            }
+          } else {
+            if (not) {
+              exec();
+            }
+          }
+        }
+        // 変更をCanvasに描画
+        ctx.putImageData(imageData, 0, 0);
+      }
+      function update() {
+        scale = Number(document.querySelector("#quality").value);
+        el.canvas.width = 720 * scale;
+        el.canvas.height = 480 * scale;
+        const texts = [];
+        var arr = el.first.value.split("");
+        ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+        contents = [];
+
+        appendContent(arr[0], 30, 150, "150px koduka", 1.1);
+        appendContent(arr[1], 150, 150, "110px koduka", 1.1);
+        appendContent(arr[2], 250, 120, "85px koduka", 1.1);
+        appendContent(arr[3], 330, 150, "160px koduka", 1.0);
+        appendContent(arr[4], 480, 150, "125px koduka", 1.05);
+        appendContent(arr[5], 600, 150, "125px koduka", 1.1);
+        appendContent(arr[6], 90, 290, "160px koduka", 1.18);
+        appendContent(arr[7], 240, 310, "155px koduka", 1.0);
+        appendContent(arr[8], 380, 310, "155px koduka", 1.0);
+        appendContent(arr[9], 530, 290, "160px koduka", 1.2);
+
+        var arr = el.second.value.split("");
+        var start = 258;
+        var end = 495;
+        for (var i = 0; i < arr.length; i++) {
+            var x = start + (end-start)/(arr.length-1) * i
+            appendContent(arr[i], x, 335, "35px noto-sans", 1.1);
+        }
+
+        render();
+      }
+
+      //ロード
+      update();
+      const kodukaFont = new FontFace(
+        "koduka",
+        "url(fonts/SourceHanSerif-Medium.otf)"
+      );
+      loadFont(kodukaFont, update);
+      const notoFont = new FontFace(
+        "noto-sans",
+        "url(fonts/NotoSansJP-Bold.ttf)"
+      );
+      loadFont(notoFont, update);
+      var beforeInputString = "";
+      setInterval(() => {
+        var str = el.first.value + el.second.value + "";
+        if (beforeInputString === str) {
+        } else {
+          beforeInputString = str;
+          update();
+        }
+      }, 1000);
+
+      function render() {
+        ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+
+        ctx.fillStyle = "#000";
+
+        ctx.fillRect(90 * scale, 180 * scale, 160 * scale, 190 * scale);
+
+        var i = 0;
+        for (c of contents) {
+          if (i == 6) {
+            ctx.fillStyle = "#fff";
+          } else {
+            ctx.fillStyle = "#000";
+          }
+          if (c[4] == null) {
+            c[4] = 1;
+          }
+          var arr = c[3].split("px");
+          ctx.font = Number(arr[0]) * scale + "px " + arr[1];
+          ctx.save(); // 現在の状態を保存
+          ctx.scale(1, c[4]); // 縦方向にスケーリング
+          ctx.fillText(c[0], c[1] * scale, c[2] * scale);
+          ctx.restore(); // 変換を元に戻す
+          i++;
+        }
+
+        //グラデーション処理
+        const imageData = ctx.getImageData(
+          0,
+          0,
+          el.canvas.width,
+          el.canvas.height
+        );
+        const data = imageData.data;
+
+        // グラデーションの作成
+        collage([0, 0, 0, 0], [255, 255, 255, 255]);
+        collage([0, 0, 0, 255], [0, 0, 0, 0]);
+        collage([0, 0, 0, 0], [255, 255, 255, 255], true);
+
+        //一旦保存
+        var url = el.canvas.toDataURL("image/png");
+        var img = new Image();
+        img.src = url;
+        ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+        var wait = setInterval(() => {
+          if (img.src != "") {
+            grad();
+            clearInterval(wait);
+          }
+        }, 1);
+        function grad() {
+          //背景処理
+          const gradient = ctx.createLinearGradient(
+            0,
+            el.canvas.height,
+            200 * scale,
+            0 - 200 * scale
+          );
+          gradient.addColorStop(0, "#d61a31"); // 上部の色
+
+          //gradient.addColorStop(1, "#ff8b36"); // 下部の色
+          gradient.addColorStop(1, "#ff8b36"); // 下部の色
+
+          // 背景にグラデーションを描画
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, el.canvas.width, el.canvas.height);
+
+          ctx.fillStyle = "#000";
+          ctx.drawImage(img, 0, 0, el.canvas.width, el.canvas.height);
+        }
+      }
+      document.getElementById("download").onclick = (event) => {
+        let link = document.createElement("a");
+        link.href = el.canvas.toDataURL("image/png");
+        link.download = "toarugagaku.png";
+        link.click();
+      };
+    </script>
+    <div>
+      <br />
+      <font size="5">使用フォント</font><br />
+      <span>※全てフリーフォントを使用しています。</span><br />
+      <span class="caslon">Noto Sans Bold</span><br />
+      <span class="caslon">源ノ明朝</span><br />
+    </div>
+  </body>
+</html>
